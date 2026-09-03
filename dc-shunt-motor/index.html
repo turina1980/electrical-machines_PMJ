@@ -1,1 +1,2771 @@
-DC Shunt Motor Virtual Lab
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>DC Shunt Motor Virtual Laboratory</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #eef2f5;
+    color: #222;
+}
+
+header {
+    background: #123f70;
+    color: white;
+    text-align: center;
+    padding: 25px;
+}
+
+header h1 {
+    margin: 0;
+}
+
+.container {
+    max-width: 1250px;
+    margin: 20px auto;
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+}
+
+.section {
+    margin-bottom: 30px;
+}
+
+.section h2 {
+    color: #123f70;
+    border-bottom: 2px solid #123f70;
+    padding-bottom: 7px;
+}
+
+.theory {
+    line-height: 1.6;
+    text-align: justify;
+}
+
+.objectives li {
+    margin: 8px 0;
+}
+
+.note {
+    background: #fff3cd;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+
+/* ================================
+   LAB LAYOUT
+================================ */
+
+.lab-layout {
+    display: grid;
+    grid-template-columns: 0.9fr 1.5fr;
+    gap: 20px;
+}
+
+.panel {
+    border: 1px solid #ccd3da;
+    border-radius: 10px;
+    padding: 18px;
+    background: white;
+}
+
+.panel-title {
+    text-align: center;
+    color: #123f70;
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+
+/* ================================
+   CIRCUIT
+================================ */
+
+.circuit {
+    width: 100%;
+    height: auto;
+}
+
+.wire {
+    stroke: #222;
+    stroke-width: 4;
+    fill: none;
+}
+
+.junction {
+    fill: #111;
+}
+
+.component {
+    fill: white;
+    stroke: #333;
+    stroke-width: 2;
+}
+
+.component-text {
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.small-text {
+    font-size: 11px;
+}
+
+
+/* ================================
+   ANALOG METERS
+================================ */
+
+.meter-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+}
+
+.meter-card {
+    text-align: center;
+}
+
+.meter-name {
+    font-size: 17px;
+    font-weight: bold;
+    color: #123f70;
+    margin-bottom: 5px;
+}
+
+.analog-meter {
+    width: 100%;
+    max-width: 360px;
+    margin: auto;
+    display: block;
+}
+
+.meter-reading {
+    font-size: 17px;
+    font-weight: bold;
+    color: #123f70;
+    margin-top: 5px;
+}
+
+
+/* ================================
+   MOTOR
+================================ */
+
+.motor-area {
+    text-align: center;
+    margin: 25px 0;
+}
+
+.motor {
+    width: 180px;
+    height: 180px;
+    margin: auto;
+
+    border: 12px solid #555;
+    border-radius: 50%;
+
+    background: #ddd;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.running {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+
+}
+
+
+/* ================================
+   CONTROL
+================================ */
+
+.control {
+    margin-top: 25px;
+    padding: 20px;
+    border: 1px solid #ccd3da;
+    border-radius: 8px;
+}
+
+.voltage-value {
+    font-size: 26px;
+    font-weight: bold;
+    color: #123f70;
+}
+
+input[type="range"] {
+    width: 100%;
+    cursor: pointer;
+}
+
+
+/* ================================
+   BUTTON
+================================ */
+
+.buttons {
+    text-align: center;
+    margin: 15px;
+}
+
+button {
+    padding: 12px 35px;
+    margin: 5px;
+    border: none;
+    border-radius: 7px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.start {
+    background: green;
+    color: white;
+}
+
+.stop {
+    background: red;
+    color: white;
+}
+
+.status {
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+
+/* ================================
+   DIGITAL DISPLAY
+================================ */
+
+.digital-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 10px;
+}
+
+.digital {
+    background: #e9eef3;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.digital-title {
+    font-size: 13px;
+    font-weight: bold;
+    color: #123f70;
+}
+
+.digital-value {
+    font-size: 24px;
+    font-weight: bold;
+    color: #123f70;
+    margin-top: 8px;
+}
+
+
+/* ================================
+   RESPONSIVE
+================================ */
+
+@media(max-width:950px) {
+
+    .lab-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .digital-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+}
+
+@media(max-width:600px) {
+
+    .meter-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .digital-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+footer {
+    margin-top: 25px;
+    padding: 20px;
+    text-align: center;
+    background: #123f70;
+    color: white;
+}
+
+
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#eef3f8;color:#111}
+header{background:#06265f;color:#fff;text-align:center;padding:14px}
+header h1{margin:0;font-size:30px}
+header p{margin:5px 0 0;color:#ffe600;font-weight:bold}
+.w-wrap{width:98%;max-width:1500px;margin:12px auto}
+.w-top{display:grid;grid-template-columns:42% 58%;gap:10px}
+.w-panel{background:#fff;border:1px solid #aaa;border-radius:8px;overflow:hidden}
+.w-title{background:#07316f;color:#fff;text-align:center;font-weight:bold;font-size:20px;padding:9px}
+.w-reference{padding:8px}.w-reference img{width:100%;display:block}
+.w-boardArea{padding:10px;overflow:auto}
+.w-board{position:relative;width:900px;height:570px;margin:auto;background:#f7f1e6;border:1px solid #aaa;border-radius:6px}
+
+/* No wires are drawn initially. Wires appear only after a student makes a connection. */
+#w_wires{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:none;overflow:visible}
+.w-wire{stroke:#111;stroke-width:4;fill:none}
+
+.w-component{position:absolute;background:#fff;border:2px solid #222;border-radius:7px;text-align:center;z-index:4}
+.w-meter{width:145px;height:112px;padding:9px}
+.w-meter .name{font-size:22px;font-weight:bold}
+.w-meter .desc{font-size:12px}
+.w-meter .unit{font-size:28px;margin-top:5px}
+.w-ia{left:80px;top:30px}
+.w-ish{left:285px;top:30px}
+.w-il{left:490px;top:30px}
+
+.w-motor{left:75px;top:230px;width:150px;height:180px;padding-top:35px}
+.w-motor .big{font-size:27px;font-weight:bold}
+.w-motor .gear{font-size:45px;margin:10px}
+
+.w-field{left:285px;top:245px;width:150px;height:165px;padding-top:18px}
+.w-field .coil{font-size:50px;line-height:55px}
+
+.w-volt{width:145px;height:112px;padding:11px}
+.w-volt .name{font-size:22px;font-weight:bold}
+.w-volt .desc{font-size:12px}
+.w-volt .unit{font-size:28px;margin-top:7px}
+.w-va{left:505px;top:240px}
+.w-vsh{left:680px;top:240px}
+
+.w-supply{left:700px;top:35px;width:145px;height:175px;padding-top:18px}
+.w-supply .plus{font-size:30px;color:#d00000;font-weight:bold}
+.w-supply .minus{font-size:30px;font-weight:bold}
+.w-supply .v{font-size:22px;font-weight:bold;margin:8px}
+
+/* Red = positive, black = negative */
+.w-terminal{
+position:absolute;width:25px;height:25px;border-radius:50%;
+border:3px solid #fff;box-shadow:0 0 0 2px #222;
+cursor:pointer;z-index:10
+}
+.w-pos{background:#d90000}
+.w-neg{background:#111}
+.w-terminal:hover{transform:scale(1.15)}
+.w-terminal.selected{background:#17a600!important;transform:scale(1.2);box-shadow:0 0 0 3px #ffd000}
+.w-termLabel{position:absolute;font-size:13px;font-weight:bold;z-index:8}
+
+.w-bottom{display:grid;grid-template-columns:20% 47% 33%;gap:10px;margin-top:10px}
+.w-box{background:#fff;border:1px solid #bbb;border-radius:8px;padding:10px}
+.w-box h3{margin:0 0 8px;text-align:center;color:#07316f}
+.w-instructions ol{padding-left:22px;margin:5px}
+.w-instructions li{margin:10px 0;font-weight:600}
+
+.w-connections{padding:0;overflow:hidden}
+.w-connections h3{background:#087a45;color:#fff;padding:8px;margin:0}
+.w-row{display:grid;grid-template-columns:34px 1fr 125px;gap:4px;padding:4px 8px;border-bottom:1px solid #ddd;font-size:14px}
+.w-row .w-num{color:#176b3c;font-weight:bold}
+.w-state{color:#d00000;font-weight:bold}
+.w-row.done{background:#e1f6e7}
+.w-row.done .w-state{color:#087a45}
+
+.w-status{background:#fff8dc;border:1px solid #d7c04c;min-height:100px;padding:15px;font-size:17px;font-weight:bold}
+.w-status.ok{background:#e0f6e4;border-color:#299445;color:#087a45}
+.w-status.bad{background:#ffe1e1;border-color:#d22;color:#a00000}
+
+button{width:100%;padding:14px;margin-top:10px;border:0;border-radius:7px;font-size:16px;font-weight:bold;cursor:pointer}
+.w-reset{background:#d52b2b;color:#fff}
+.w-continue{background:#8b9aaa;color:#fff}
+.w-continue.enabled{background:#16883f}
+.w-continue:disabled{cursor:not-allowed}
+
+.w-legend{text-align:center;font-size:13px;margin-top:8px}
+.w-dot{display:inline-block;width:12px;height:12px;border-radius:50%;vertical-align:middle;margin-right:4px}
+.w-r{background:#d90000}.w-b{background:#111}.w-g{background:#17a600}
+
+@media(max-width:1100px){
+.w-top,.w-bottom{grid-template-columns:1fr}
+.w-boardArea{overflow-x:auto}
+}
+
+
+.w-wire{stroke:#111;stroke-width:5;fill:none;stroke-linecap:round;pointer-events:none}
+.w-terminal{pointer-events:auto}
+.w-subheader{background:#06265f;color:#fff;text-align:center;padding:14px;border-radius:8px;margin-bottom:10px}
+.w-subheader h1{margin:0;font-size:28px}
+.w-subheader p{margin:5px 0 0;color:#ffe600;font-weight:bold}
+.w-status{background:#fff8dc;border:1px solid #d7c04c;min-height:100px;padding:15px;font-size:17px;font-weight:bold}
+.w-status.ok{background:#e0f6e4;border-color:#299445;color:#087a45}
+.w-status.bad{background:#ffe1e1;border-color:#d22;color:#a00000}
+.w-row{display:grid;grid-template-columns:34px 1fr 125px;gap:4px;padding:4px 8px;border-bottom:1px solid #ddd;font-size:14px}
+.w-row .w-num{color:#176b3c;font-weight:bold}
+.w-row .w-state{color:#d00000;font-weight:bold}
+.w-row.done{background:#e1f6e7}
+.w-row.done .w-state{color:#087a45}
+
+/* ================================
+   COMBINED LAB - STEP CONTROL
+================================ */
+.locked{
+    opacity:0.45;
+    pointer-events:none;
+}
+#measurementSection{
+    transition:opacity .3s ease;
+}
+#measurementSection .section{
+    margin-bottom:30px;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+<h1>DC Shunt Motor Virtual Laboratory</h1>
+
+<p>Electrical Machines</p>
+
+</header>
+
+
+<div class="container">
+
+
+<!-- ================================
+     INTRODUCTION
+================================ -->
+
+<div class="section">
+
+<h2>1. Introduction</h2>
+
+<p class="theory">
+
+A DC shunt motor is an electrical machine in which the field winding
+is connected in parallel with the armature winding. The motor converts
+electrical energy into mechanical energy.
+
+This Virtual Laboratory allows students to investigate the effect of
+armature voltage on the speed and electrical parameters of a DC shunt
+motor.
+
+</p>
+
+</div>
+
+
+<!-- ================================
+     OBJECTIVES
+================================ -->
+
+<div class="section">
+
+<h2>2. Learning Objectives</h2>
+
+<ul class="objectives">
+
+<li>
+Understand the operating principle of a DC shunt motor.
+</li>
+
+<li>
+Identify the parallel connection between armature and field winding.
+</li>
+
+<li>
+Measure armature voltage and field voltage.
+</li>
+
+<li>
+Measure armature current and field current.
+</li>
+
+<li>
+Investigate the relationship between armature voltage and motor speed.
+</li>
+
+</ul>
+
+</div>
+
+
+<!-- ================================
+     THEORY
+================================ -->
+
+<div class="section">
+
+<h2>3. Theory</h2>
+
+<p class="theory">
+
+In a DC shunt motor, the armature winding and shunt field winding
+are connected in parallel across the DC supply.
+
+For a constant field flux, the motor speed is approximately
+proportional to the armature voltage.
+
+Therefore:
+
+<br><br>
+
+<b>Armature Voltage ↑ → Motor Speed ↑</b>
+
+</p>
+
+<div class="note">
+
+<b>Note:</b>
+
+The readings in this Virtual Laboratory are simulated values
+for educational purposes.
+
+</div>
+
+</div>
+
+
+<!-- ================================
+     VIRTUAL LAB
+================================ -->
+
+
+<!-- =========================================================
+     STEP 3 - VIRTUAL WIRING (COMBINED WITH MEASUREMENT)
+========================================================= -->
+<div class="section" id="wiringSection">
+<div class="w-title" style="color:#123f70;border-bottom:2px solid #123f70;padding-bottom:7px;font-size:24px;font-weight:bold;margin-bottom:15px">
+STEP 3: Virtual Wiring Practice
+</div>
+<div class="w-subheader">
+<h1>DC SHUNT MOTOR – VIRTUAL WIRING PRACTICE</h1>
+<p>Practice the circuit connection virtually before performing the wiring on the actual DC shunt motor.</p>
+</div>
+
+<div class="w-wrap">
+<div class="w-top">
+
+<section class="w-panel">
+<div class="w-title">CIRCUIT DIAGRAM (REFERENCE)</div>
+<div class="w-reference">
+<img src="circuit_reference.png" alt="DC Shunt Motor Reference Circuit">
+</div>
+</section>
+
+<section class="w-panel">
+<div class="w-title">VIRTUAL WIRING BOARD (CLICK TERMINALS TO CONNECT)</div>
+<div class="w-boardArea">
+<div class="w-board">
+
+<svg id="w_wires"></svg>
+
+<!-- CURRENT METERS -->
+<div class="w-component w-meter w-ia">
+<div class="name">I<sub>a</sub></div>
+<div class="desc">Armature Current</div>
+<div class="unit">A</div>
+</div>
+
+<div class="w-component w-meter w-ish">
+<div class="name">I<sub>sh</sub></div>
+<div class="desc">Shunt Current</div>
+<div class="unit">A</div>
+</div>
+
+<div class="w-component w-meter w-il">
+<div class="name">I<sub>L</sub></div>
+<div class="desc">Line Current</div>
+<div class="unit">A</div>
+</div>
+
+<!-- ARMATURE -->
+<div class="w-component w-motor">
+<div class="big">E<sub>b</sub></div>
+<div class="gear">⚙</div>
+<div>A<sub>1</sub> &nbsp;&nbsp; A<sub>2</sub></div>
+</div>
+
+<!-- SHUNT FIELD -->
+<div class="w-component w-field">
+<div style="font-size:20px;font-weight:bold">SHUNT FIELD</div>
+<div class="coil">〰</div>
+<div>F<sub>1</sub> &nbsp;&nbsp; F<sub>2</sub></div>
+</div>
+
+<!-- VOLTMETERS -->
+<div class="w-component w-volt w-va">
+<div class="name">V<sub>a</sub></div>
+<div class="desc">Armature Voltage</div>
+<div class="unit">V</div>
+</div>
+
+<div class="w-component w-volt w-vsh">
+<div class="name">V<sub>sh</sub></div>
+<div class="desc">Shunt Field Voltage</div>
+<div class="unit">V</div>
+</div>
+
+<!-- DC SUPPLY -->
+<div class="w-component w-supply">
+<div class="plus">+</div>
+<div class="v">V<sub>t</sub></div>
+<div>DC VOLTAGE<br>SUPPLY</div>
+<div class="minus">−</div>
+</div>
+
+<!--
+POLARITY MATCHES THE USER'S REFERENCE:
+Ia:  - on left, + on right
+IL:  - on left, + on right
+Ish: + on upper/left terminal, - on lower/right terminal
+Va:  + at A1 side, - at A2 side
+Vsh: + at F1 side, - at F2 side
+Vt: + top, - bottom
+-->
+
+<!-- Ia -->
+<div class="w-terminal w-neg" data-id="ia_n" style="left:100px;top:125px"></div>
+<div class="w-terminal w-pos" data-id="ia_p" style="left:180px;top:125px"></div>
+
+<!-- Ish -->
+<div class="w-terminal w-pos" data-id="ish_p" style="left:305px;top:125px"></div>
+<div class="w-terminal w-neg" data-id="ish_n" style="left:385px;top:125px"></div>
+
+<!-- IL -->
+<div class="w-terminal w-neg" data-id="il_n" style="left:510px;top:125px"></div>
+<div class="w-terminal w-pos" data-id="il_p" style="left:590px;top:125px"></div>
+
+<!-- A1 / A2 -->
+<div class="w-terminal w-pos" data-id="a1" style="left:72px;top:212px"></div>
+<div class="w-terminal w-neg" data-id="a2" style="left:72px;top:410px"></div>
+
+<!-- F1 / F2 -->
+<div class="w-terminal w-pos" data-id="f1" style="left:282px;top:230px"></div>
+<div class="w-terminal w-neg" data-id="f2" style="left:282px;top:410px"></div>
+
+<!-- Va -->
+<div class="w-terminal w-pos" data-id="va_p" style="left:522px;top:215px"></div>
+<div class="w-terminal w-neg" data-id="va_n" style="left:522px;top:335px"></div>
+
+<!-- Vsh -->
+<div class="w-terminal w-pos" data-id="vsh_p" style="left:697px;top:215px"></div>
+<div class="w-terminal w-neg" data-id="vsh_n" style="left:697px;top:335px"></div>
+
+<!-- Vt -->
+<div class="w-terminal w-pos" data-id="vt_p" style="left:760px;top:8px"></div>
+<div class="w-terminal w-neg" data-id="vt_n" style="left:760px;top:195px"></div>
+
+<!-- POLARITY LABELS -->
+<div class="w-termLabel" style="left:95px;top:102px">−</div>
+<div class="w-termLabel" style="left:176px;top:102px;color:#c00">+</div>
+
+<div class="w-termLabel" style="left:301px;top:102px;color:#c00">+</div>
+<div class="w-termLabel" style="left:381px;top:102px">−</div>
+
+<div class="w-termLabel" style="left:505px;top:102px">−</div>
+<div class="w-termLabel" style="left:586px;top:102px;color:#c00">+</div>
+
+<div class="w-termLabel" style="left:62px;top:245px;color:#c00">A1 +</div>
+<div class="w-termLabel" style="left:62px;top:442px">A2 −</div>
+
+<div class="w-termLabel" style="left:272px;top:260px;color:#c00">F1 +</div>
+<div class="w-termLabel" style="left:272px;top:438px">F2 −</div>
+
+<div class="w-termLabel" style="left:512px;top:192px;color:#c00">+</div>
+<div class="w-termLabel" style="left:512px;top:362px">−</div>
+
+<div class="w-termLabel" style="left:687px;top:192px;color:#c00">+</div>
+<div class="w-termLabel" style="left:687px;top:362px">−</div>
+
+<div class="w-termLabel" style="left:754px;top:35px;color:#c00;font-size:18px">+</div>
+<div class="w-termLabel" style="left:754px;top:220px;font-size:18px">−</div>
+
+</div>
+
+<div class="w-legend">
+<span><i class="w-dot w-r"></i> Positive (+)</span>
+<span><i class="w-dot w-b"></i> Negative (−)</span>
+<span><i class="w-dot w-g"></i> Selected</span>
+</div>
+</div>
+</section>
+</div>
+
+<div class="w-bottom">
+
+<div class="w-box w-instructions">
+<h3>HOW TO USE</h3>
+<ol>
+<li>Click the first terminal.</li>
+<li>Click the second terminal to create a wire.</li>
+<li>Follow the circuit diagram (reference).</li>
+<li>Complete all connections correctly.</li>
+<li>Press RESET to clear all connections.</li>
+</ol>
+</div>
+
+<div class="w-box w-connections">
+<h3>REQUIRED CONNECTIONS</h3>
+<div id="w_rows"></div>
+</div>
+
+<div class="w-box">
+<h3>STATUS</h3>
+<div id="w_status" class="w-status">🔵 Please start connecting the circuit according to the diagram.</div>
+<button class="w-reset" onclick="resetWiring()">↻ RESET CONNECTIONS</button>
+<button class="w-continue" id="w_continueBtn" disabled onclick="goToLab()">🔒 WIRING PRACTICE COMPLETED<br><small>Complete all connections correctly to enable this button</small></button>
+</div>
+
+</div>
+</div>
+</div>
+
+<div class="section locked" id="measurementSection">
+
+<h2>4. Virtual Experiment – Meter Reading & Measurement</h2>
+
+
+<div class="lab-layout">
+
+
+<!-- ================================
+     CIRCUIT
+================================ -->
+
+<div class="panel">
+
+<div class="panel-title">
+
+DC SHUNT MOTOR CIRCUIT
+
+</div>
+
+
+<svg
+class="circuit"
+viewBox="0 0 500 650"
+xmlns="http://www.w3.org/2000/svg">
+
+
+<!-- SUPPLY -->
+
+<rect
+x="150"
+y="20"
+width="200"
+height="65"
+rx="8"
+class="component"/>
+
+<text
+x="250"
+y="45"
+text-anchor="middle"
+class="component-text">
+
++ DC SUPPLY -
+
+</text>
+
+<text
+x="250"
+y="68"
+text-anchor="middle"
+id="svgVoltage">
+
+0 V
+
+</text>
+
+
+<!-- TOP WIRE -->
+
+<line
+x1="250"
+y1="85"
+x2="250"
+y2="120"
+class="wire"/>
+
+
+<circle
+cx="250"
+cy="120"
+r="7"
+class="junction"/>
+
+
+<!-- LEFT ARMATURE -->
+
+<line
+x1="250"
+y1="120"
+x2="100"
+y2="120"
+class="wire"/>
+
+<line
+x1="100"
+y1="120"
+x2="100"
+y2="180"
+class="wire"/>
+
+
+<!-- ARMATURE AMMETER -->
+
+<circle
+cx="100"
+cy="215"
+r="35"
+class="component"/>
+
+<text
+x="100"
+y="225"
+text-anchor="middle"
+font-size="25"
+font-weight="bold">
+
+A
+
+</text>
+
+<text
+x="100"
+y="260"
+text-anchor="middle"
+class="small-text">
+
+ARMATURE AMMETER
+
+</text>
+
+
+<line
+x1="100"
+y1="250"
+x2="100"
+y2="290"
+class="wire"/>
+
+
+<!-- ARMATURE VOLTMETER -->
+
+<circle
+cx="100"
+cy="325"
+r="35"
+class="component"/>
+
+<text
+x="100"
+y="335"
+text-anchor="middle"
+font-size="25"
+font-weight="bold">
+
+V
+
+</text>
+
+<text
+x="100"
+y="370"
+text-anchor="middle"
+class="small-text">
+
+ARMATURE VOLTMETER
+
+</text>
+
+
+<line
+x1="100"
+y1="360"
+x2="100"
+y2="410"
+class="wire"/>
+
+
+<!-- MOTOR -->
+
+<circle
+cx="100"
+cy="455"
+r="45"
+class="component"/>
+
+<text
+x="100"
+y="465"
+text-anchor="middle"
+font-size="30"
+font-weight="bold">
+
+M
+
+</text>
+
+<text
+x="100"
+y="515"
+text-anchor="middle"
+class="component-text">
+
+DC MOTOR
+
+</text>
+
+
+<line
+x1="100"
+y1="500"
+x2="100"
+y2="570"
+class="wire"/>
+
+
+<!-- RIGHT FIELD -->
+
+<line
+x1="250"
+y1="120"
+x2="400"
+y2="120"
+class="wire"/>
+
+<line
+x1="400"
+y1="120"
+x2="400"
+y2="180"
+class="wire"/>
+
+
+<!-- FIELD VOLTMETER -->
+
+<circle
+cx="400"
+cy="215"
+r="35"
+class="component"/>
+
+<text
+x="400"
+y="225"
+text-anchor="middle"
+font-size="25"
+font-weight="bold">
+
+V
+
+</text>
+
+<text
+x="400"
+y="260"
+text-anchor="middle"
+class="small-text">
+
+FIELD VOLTMETER
+
+</text>
+
+
+<line
+x1="400"
+y1="250"
+x2="400"
+y2="290"
+class="wire"/>
+
+
+<!-- FIELD -->
+
+<rect
+x="330"
+y="290"
+width="140"
+height="70"
+rx="8"
+class="component"/>
+
+<text
+x="400"
+y="318"
+text-anchor="middle"
+class="component-text">
+
+FIELD WINDING
+
+</text>
+
+<text
+x="400"
+y="340"
+text-anchor="middle"
+class="small-text">
+
+SHUNT FIELD
+
+</text>
+
+
+<line
+x1="400"
+y1="360"
+x2="400"
+y2="400"
+class="wire"/>
+
+
+<!-- FIELD AMMETER -->
+
+<circle
+cx="400"
+cy="435"
+r="35"
+class="component"/>
+
+<text
+x="400"
+y="445"
+text-anchor="middle"
+font-size="25"
+font-weight="bold">
+
+A
+
+</text>
+
+<text
+x="400"
+y="480"
+text-anchor="middle"
+class="small-text">
+
+FIELD AMMETER
+
+</text>
+
+
+<line
+x1="400"
+y1="470"
+x2="400"
+y2="570"
+class="wire"/>
+
+
+<!-- RETURN -->
+
+<line
+x1="100"
+y1="570"
+x2="400"
+y2="570"
+class="wire"/>
+
+<circle
+cx="250"
+cy="570"
+r="7"
+class="junction"/>
+
+
+<rect
+x="150"
+y="585"
+width="200"
+height="50"
+rx="8"
+class="component"/>
+
+<text
+x="250"
+y="617"
+text-anchor="middle"
+class="component-text">
+
+− DC SUPPLY −
+
+</text>
+
+</svg>
+
+</div>
+
+
+<!-- ================================
+     METERS
+================================ -->
+
+<div class="panel">
+
+<div class="panel-title">
+
+ANALOG INSTRUMENTS
+
+</div>
+
+
+<div class="meter-grid">
+
+
+<!-- ARMATURE AMMETER -->
+
+<div class="meter-card">
+
+<div class="meter-name">
+
+ARMATURE AMMETER (Iₐ)
+
+</div>
+
+<svg
+id="meterIa"
+class="analog-meter"
+viewBox="0 0 360 280">
+</svg>
+
+<div
+id="readingIa"
+class="meter-reading">
+
+0.00 A
+
+</div>
+
+</div>
+
+
+<!-- FIELD AMMETER -->
+
+<div class="meter-card">
+
+<div class="meter-name">
+
+FIELD AMMETER (I𝒇)
+
+</div>
+
+<svg
+id="meterIf"
+class="analog-meter"
+viewBox="0 0 360 280">
+</svg>
+
+<div
+id="readingIf"
+class="meter-reading">
+
+0.00 A
+
+</div>
+
+</div>
+
+
+<!-- LINE AMMETER -->
+
+<div class="meter-card">
+
+<div class="meter-name">
+
+LINE AMMETER (Iₗ)
+
+</div>
+
+<svg
+id="meterIL"
+class="analog-meter"
+viewBox="0 0 360 280">
+</svg>
+
+<div
+id="readingIL"
+class="meter-reading">
+
+0.00 A
+
+</div>
+
+</div>
+
+
+<!-- ARMATURE VOLTMETER -->
+
+<div class="meter-card">
+
+<div class="meter-name">
+
+ARMATURE VOLTMETER (Vₐ)
+
+</div>
+
+<svg
+id="meterVa"
+class="analog-meter"
+viewBox="0 0 360 280">
+</svg>
+
+<div
+id="readingVa"
+class="meter-reading">
+
+0.00 V
+
+</div>
+
+</div>
+
+
+<!-- FIELD VOLTMETER -->
+
+<div class="meter-card">
+
+<div class="meter-name">
+
+FIELD VOLTMETER (V𝒇)
+
+</div>
+
+<svg
+id="meterVf"
+class="analog-meter"
+viewBox="0 0 360 280">
+</svg>
+
+<div
+id="readingVf"
+class="meter-reading">
+
+0.00 V
+
+</div>
+
+</div>
+
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- ================================
+     MOTOR
+================================ -->
+
+<div class="motor-area">
+
+<div
+class="motor"
+id="motor">
+
+DC MOTOR
+
+</div>
+
+
+<div class="buttons">
+
+<button
+class="start"
+onclick="startMotor()">
+
+START
+
+</button>
+
+
+<button
+class="stop"
+onclick="stopMotor()">
+
+STOP
+
+</button>
+
+</div>
+
+
+<div
+class="status"
+id="status">
+
+MOTOR STOPPED
+
+</div>
+
+</div>
+
+
+<!-- ================================
+     CONTROL
+================================ -->
+
+<div class="control">
+
+<h3>Armature Voltage Control</h3>
+
+<p>
+
+Armature Voltage:
+
+<span
+class="voltage-value"
+id="voltageValue">
+
+0 V
+
+</span>
+
+</p>
+
+
+<input
+type="range"
+id="voltage"
+min="0"
+max="220"
+value="0"
+step="1">
+
+
+<div
+style="display:flex;
+justify-content:space-between;">
+
+<span>0 V</span>
+
+<span>220 V</span>
+
+</div>
+
+</div>
+
+
+<!-- ================================
+     DIGITAL READINGS
+================================ -->
+
+<h3>Digital Readings</h3>
+
+
+<div class="digital-grid">
+
+
+<div class="digital">
+
+<div class="digital-title">
+ARMATURE VOLTAGE
+</div>
+
+<div
+class="digital-value"
+id="digitalVa">
+
+0
+
+</div>
+
+V
+
+</div>
+
+
+<div class="digital">
+
+<div class="digital-title">
+FIELD VOLTAGE
+</div>
+
+<div
+class="digital-value"
+id="digitalVf">
+
+0
+
+</div>
+
+V
+
+</div>
+
+
+<div class="digital">
+
+<div class="digital-title">
+ARMATURE CURRENT
+</div>
+
+<div
+class="digital-value"
+id="digitalIa">
+
+0.00
+
+</div>
+
+A
+
+</div>
+
+
+<div class="digital">
+
+<div class="digital-title">
+FIELD CURRENT
+</div>
+
+<div
+class="digital-value"
+id="digitalIf">
+
+0.00
+
+</div>
+
+A
+
+</div>
+
+
+<div class="digital">
+
+<div class="digital-title">
+LINE CURRENT
+</div>
+
+<div
+class="digital-value"
+id="digitalIL">
+
+0.00
+
+</div>
+
+A
+
+</div>
+
+
+<div class="digital">
+
+<div class="digital-title">
+SPEED
+</div>
+
+<div
+class="digital-value"
+id="digitalSpeed">
+
+0
+
+</div>
+
+RPM
+
+</div>
+
+
+<div class="digital">
+
+<div class="digital-title">
+TORQUE
+</div>
+
+<div
+class="digital-value"
+id="digitalTorque">
+
+0.00
+
+</div>
+
+Nm
+
+</div>
+
+
+</div>
+
+
+<!-- PROCEDURE -->
+
+<div class="section">
+
+<h2>5. Experimental Procedure</h2>
+
+<ol>
+
+<li>Set the armature voltage to 0 V.</li>
+
+<li>Click START.</li>
+
+<li>Gradually increase the armature voltage.</li>
+
+<li>Observe the armature voltmeter.</li>
+
+<li>Observe the field voltmeter.</li>
+
+<li>Observe the armature ammeter.</li>
+
+<li>Observe the field ammeter.</li>
+
+<li>Observe the line ammeter.</li>
+
+<li>Record the motor speed and torque.</li>
+
+<li>Repeat for different voltage values.</li>
+
+<li>Click STOP when finished.</li>
+
+</ol>
+
+</div>
+
+
+<div class="section">
+
+<h2>6. Safety Note</h2>
+
+<div class="note">
+
+This Virtual Laboratory is a computer simulation intended for
+educational purposes. Always follow the appropriate safety procedures
+when operating an actual DC motor laboratory setup.
+
+</div>
+
+</div>
+
+
+</div>
+
+
+<footer>
+
+DC Shunt Motor Virtual Laboratory | Electrical Machines
+
+</footer>
+
+
+<script>
+
+
+/*
+Correct order requested by lecturer:
+1  Vt (+) -> IL (+)
+2  IL (-) -> Ish (+)
+3  Ish (-) -> F1 (+)
+4  Ia (+) -> IL (-)
+5  Ia (-) -> A1 (+)
+6  A2 (-) -> Vt (-)
+7  F2 (-) -> Vt (-)
+8  Va (+) -> A1 (+)
+9  Va (-) -> A2 (-)
+10 Vsh (+) -> F1 (+)
+11 Vsh (-) -> F2 (-)
+
+IMPORTANT:
+The list is only the required sequence/checklist.
+The student can make connections in any order; the system checks each pair.
+*/
+
+const required=[
+["vt_p","il_p","Vt (+) → IL (+)"],
+["il_n","ish_p","IL (−) → Ish (+)"],
+["ish_n","f1","Ish (−) → F1 (+)"],
+["ia_p","il_n","Ia (+) → IL (−)"],
+["ia_n","a1","Ia (−) → A1 (+)"],
+["a2","vt_n","A2 (−) → Vt (−)"],
+["f2","vt_n","F2 (−) → Vt (−)"],
+["va_p","a1","Va (+) → A1 (+)"],
+["va_n","a2","Va (−) → A2 (−)"],
+["vsh_p","f1","Vsh (+) → F1 (+)"],
+["vsh_n","f2","Vsh (−) → F2 (−)"]
+];
+
+const p={
+vt_p:[772,20],vt_n:[772,207],
+il_p:[602,137],il_n:[522,137],
+ish_p:[317,137],ish_n:[397,137],
+ia_p:[192,137],ia_n:[112,137],
+a1:[84,224],a2:[84,422],
+f1:[294,242],f2:[294,422],
+va_p:[534,227],va_n:[534,347],
+vsh_p:[709,227],vsh_n:[709,347]
+};
+
+let selected=null;
+let connections=[];
+
+function buildRows(){
+ const rows=document.getElementById("w_rows");
+ rows.innerHTML="";
+ required.forEach((r,i)=>{
+   const d=document.createElement("div");
+   d.className="w-row";
+   d.id="row"+i;
+   d.innerHTML=`<div class="w-num">${i+1}</div><div>${r[2]}</div><div class="w-state">Not connected</div>`;
+   rows.appendChild(d);
+ });
+}
+buildRows();
+
+document.querySelectorAll(".w-terminal").forEach(t=>{
+ t.addEventListener("click",()=>{
+   const id=t.dataset.id;
+
+   if(selected===null){
+     selected=id;
+     t.classList.add("selected");
+     setStatus("🟢 Terminal selected. Now click the second terminal.","");
+     return;
+   }
+
+   if(selected===id){
+     t.classList.remove("selected");
+     selected=null;
+     setStatus("🔵 Please select a terminal to start wiring.","");
+     return;
+   }
+
+   connect(selected,id);
+   document.querySelectorAll(".w-terminal").forEach(x=>x.classList.remove("selected"));
+   selected=null;
+ });
+});
+
+function same(a,b,c,d){
+ return (a===c && b===d)||(a===d && b===c);
+}
+
+function isRequired(a,b){
+ return required.some(r=>same(a,b,r[0],r[1]));
+}
+
+function duplicate(a,b){
+ return connections.some(c=>same(a,b,c[0],c[1]));
+}
+
+function connect(a,b){
+ if(duplicate(a,b)){
+   setStatus("⚠️ This connection already exists.","bad");
+   return;
+ }
+
+ connections.push([a,b]);
+ drawWire(a,b);
+
+ if(isRequired(a,b)){
+   setStatus("✅ Correct connection!","ok");
+   updateRows();
+ }else{
+   setStatus("❌ Incorrect connection. Please press RESET and try again.","bad");
+ }
+
+ checkComplete();
+}
+
+function drawWire(a,b){
+ const svg=document.getElementById("w_wires");
+ const q=document.createElementNS("http://www.w3.org/2000/svg","line");
+
+ q.setAttribute("x1",p[a][0]);
+ q.setAttribute("y1",p[a][1]);
+ q.setAttribute("x2",p[b][0]);
+ q.setAttribute("y2",p[b][1]);
+ q.setAttribute("class","w-wire");
+
+ svg.appendChild(q);
+}
+
+function updateRows(){
+ required.forEach((r,i)=>{
+   if(connections.some(c=>same(c[0],c[1],r[0],r[1]))){
+     const row=document.getElementById("row"+i);
+     row.classList.add("done");
+     row.querySelector(".w-state").textContent="Connected ✓";
+   }
+ });
+}
+
+function checkComplete(){
+ const complete=required.every(r=>
+   connections.some(c=>same(c[0],c[1],r[0],r[1]))
+ );
+
+ if(complete){
+   setStatus("🎉 WIRING PRACTICE COMPLETED! You are now ready to perform the wiring on the actual DC shunt motor.","ok");
+
+   const b=document.getElementById("w_continueBtn");
+   b.disabled=false;
+   b.classList.add("w-enabled");
+   b.innerHTML="➡ CONTINUE TO VIRTUAL LAB<br><small>Proceed to the actual motor measurement activity</small>";
+ }
+}
+
+function setStatus(text,cls){
+ const s=document.getElementById("w_status");
+ s.className="w-status"+(cls?" "+cls:"");
+ s.innerHTML=text;
+}
+
+function resetWiring(){
+ connections=[];
+ selected=null;
+
+ // This clears ONLY student-made wires.
+ // All components, terminals, polarity signs and reference circuit remain.
+ document.getElementById("w_wires").innerHTML="";
+
+ document.querySelectorAll(".w-terminal").forEach(t=>{
+   t.classList.remove("selected");
+ });
+
+ buildRows();
+
+ const b=document.getElementById("w_continueBtn");
+ b.disabled=true;
+ b.classList.remove("w-enabled");
+ b.innerHTML="🔒 WIRING PRACTICE COMPLETED<br><small>Complete all connections correctly to enable this button</small>";
+
+ setStatus("🔵 Please start connecting the circuit according to the diagram.","");
+}
+
+function goToLab(){
+ document.getElementById("measurementSection").classList.remove("locked"); document.getElementById("measurementSection").scrollIntoView({behavior:"smooth"});
+}
+
+
+/* ==========================================================
+   ANALOG METER ENGINE
+========================================================== */
+
+function createMeter(id, unit, maxValue, majorStep, labelValues) {
+
+    const svg =
+        document.getElementById(id);
+
+    const NS =
+        "http://www.w3.org/2000/svg";
+
+
+    /* Background */
+
+    const body =
+        document.createElementNS(NS, "rect");
+
+    body.setAttribute("x", "8");
+    body.setAttribute("y", "8");
+    body.setAttribute("width", "344");
+    body.setAttribute("height", "264");
+    body.setAttribute("rx", "10");
+
+    body.setAttribute("fill", "#d7d7d7");
+    body.setAttribute("stroke", "#555");
+    body.setAttribute("stroke-width", "4");
+
+    svg.appendChild(body);
+
+
+    /* Inner meter */
+
+    const face =
+        document.createElementNS(NS, "rect");
+
+    face.setAttribute("x", "18");
+    face.setAttribute("y", "18");
+    face.setAttribute("width", "324");
+    face.setAttribute("height", "170");
+    face.setAttribute("rx", "5");
+
+    face.setAttribute("fill", "#fff");
+    face.setAttribute("stroke", "#222");
+    face.setAttribute("stroke-width", "3");
+
+    svg.appendChild(face);
+
+
+    /* Black bottom */
+
+    const bottom =
+        document.createElementNS(NS, "rect");
+
+    bottom.setAttribute("x", "18");
+    bottom.setAttribute("y", "188");
+    bottom.setAttribute("width", "324");
+    bottom.setAttribute("height", "75");
+
+    bottom.setAttribute("fill", "#171717");
+
+    svg.appendChild(bottom);
+
+
+    /* Meter unit */
+
+    const title =
+        document.createElementNS(NS, "text");
+
+    title.setAttribute("x", "180");
+    title.setAttribute("y", "112");
+
+    title.setAttribute("text-anchor", "middle");
+
+    title.setAttribute("font-size", "30");
+    title.setAttribute("font-weight", "bold");
+
+    title.setAttribute("text-decoration", "underline");
+
+    title.textContent = unit;
+
+    svg.appendChild(title);
+
+
+    /* H-670 */
+
+    const model =
+        document.createElementNS(NS, "text");
+
+    model.setAttribute("x", "130");
+    model.setAttribute("y", "181");
+
+    model.setAttribute("font-size", "11");
+
+    model.textContent = "H-670";
+
+    svg.appendChild(model);
+
+
+    /* CLASS 2.0 */
+
+    const cls =
+        document.createElementNS(NS, "text");
+
+    cls.setAttribute("x", "265");
+    cls.setAttribute("y", "181");
+
+    cls.setAttribute("font-size", "11");
+
+    cls.textContent = "CLASS 2.0";
+
+    svg.appendChild(cls);
+
+
+    /* =====================================================
+       SCALE
+    ===================================================== */
+
+    const cx = 180;
+    const cy = 150;
+    const radius = 128;
+
+    const startAngle = 210;
+    const endAngle = 330;
+
+
+    function point(angle, r) {
+
+        const rad =
+            angle * Math.PI / 180;
+
+        return {
+
+            x: cx + r * Math.cos(rad),
+
+            y: cy + r * Math.sin(rad)
+
+        };
+
+    }
+
+
+    /* Tick marks */
+
+    const numberOfTicks = 50;
+
+
+    for (
+        let i = 0;
+        i <= numberOfTicks;
+        i++
+    ) {
+
+        const value =
+            i / numberOfTicks * maxValue;
+
+        const angle =
+            startAngle +
+            (i / numberOfTicks) *
+            (endAngle - startAngle);
+
+
+        const outer =
+            point(angle, radius);
+
+        const tickLength =
+            i % 10 === 0 ? 16 : 8;
+
+        const inner =
+            point(
+                angle,
+                radius - tickLength
+            );
+
+
+        const line =
+            document.createElementNS(
+                NS,
+                "line"
+            );
+
+
+        line.setAttribute(
+            "x1",
+            outer.x
+        );
+
+        line.setAttribute(
+            "y1",
+            outer.y
+        );
+
+        line.setAttribute(
+            "x2",
+            inner.x
+        );
+
+        line.setAttribute(
+            "y2",
+            inner.y
+        );
+
+
+        line.setAttribute(
+            "stroke",
+            "#111"
+        );
+
+
+        line.setAttribute(
+            "stroke-width",
+            i % 10 === 0 ? "3" : "1.5"
+        );
+
+
+        svg.appendChild(line);
+
+    }
+
+
+    /* =====================================================
+       NUMBERS
+    ===================================================== */
+
+    labelValues.forEach(function(value) {
+
+        const ratio =
+            value / maxValue;
+
+        const angle =
+            startAngle +
+            ratio *
+            (endAngle - startAngle);
+
+
+        const p =
+            point(angle, radius - 30);
+
+
+        const text =
+            document.createElementNS(
+                NS,
+                "text"
+            );
+
+
+        text.setAttribute(
+            "x",
+            p.x
+        );
+
+        text.setAttribute(
+            "y",
+            p.y + 5
+        );
+
+        text.setAttribute(
+            "text-anchor",
+            "middle"
+        );
+
+        text.setAttribute(
+            "font-size",
+            "15"
+        );
+
+        text.setAttribute(
+            "font-weight",
+            "bold"
+        );
+
+
+        text.textContent =
+            value;
+
+
+        svg.appendChild(text);
+
+    });
+
+
+    /* =====================================================
+       NEEDLE
+    ===================================================== */
+
+    const needle =
+        document.createElementNS(
+            NS,
+            "line"
+        );
+
+
+    needle.setAttribute(
+        "id",
+        id + "_needle"
+    );
+
+
+    needle.setAttribute(
+        "x1",
+        cx
+    );
+
+    needle.setAttribute(
+        "y1",
+        cy
+    );
+
+
+    const initial =
+        point(startAngle, 105);
+
+
+    needle.setAttribute(
+        "x2",
+        initial.x
+    );
+
+    needle.setAttribute(
+        "y2",
+        initial.y
+    );
+
+
+    needle.setAttribute(
+        "stroke",
+        "#c62828"
+    );
+
+    needle.setAttribute(
+        "stroke-width",
+        "4"
+    );
+
+    needle.setAttribute(
+        "stroke-linecap",
+        "round"
+    );
+
+
+    svg.appendChild(needle);
+
+
+    /* Pivot */
+
+    const pivot =
+        document.createElementNS(
+            NS,
+            "circle"
+        );
+
+
+    pivot.setAttribute(
+        "cx",
+        cx
+    );
+
+    pivot.setAttribute(
+        "cy",
+        cy
+    );
+
+    pivot.setAttribute(
+        "r",
+        "9"
+    );
+
+    pivot.setAttribute(
+        "fill",
+        "#222"
+    );
+
+    svg.appendChild(pivot);
+
+
+    /* Bottom screw */
+
+    const screwOuter =
+        document.createElementNS(
+            NS,
+            "circle"
+        );
+
+    screwOuter.setAttribute(
+        "cx",
+        "180"
+    );
+
+    screwOuter.setAttribute(
+        "cy",
+        "225"
+    );
+
+    screwOuter.setAttribute(
+        "r",
+        "20"
+    );
+
+    screwOuter.setAttribute(
+        "fill",
+        "#222"
+    );
+
+    screwOuter.setAttribute(
+        "stroke",
+        "#aaa"
+    );
+
+    screwOuter.setAttribute(
+        "stroke-width",
+        "4"
+    );
+
+    svg.appendChild(screwOuter);
+
+
+    /* Screw line */
+
+    const screwLine =
+        document.createElementNS(
+            NS,
+            "line"
+        );
+
+    screwLine.setAttribute(
+        "x1",
+        "168"
+    );
+
+    screwLine.setAttribute(
+        "y1",
+        "225"
+    );
+
+    screwLine.setAttribute(
+        "x2",
+        "192"
+    );
+
+    screwLine.setAttribute(
+        "y2",
+        "225"
+    );
+
+    screwLine.setAttribute(
+        "stroke",
+        "#aaa"
+    );
+
+    screwLine.setAttribute(
+        "stroke-width",
+        "3"
+    );
+
+    svg.appendChild(screwLine);
+
+
+    /* Save meter information */
+
+    svg.dataset.max =
+        maxValue;
+
+    svg.dataset.start =
+        startAngle;
+
+    svg.dataset.end =
+        endAngle;
+
+}
+
+
+/* ==========================================================
+   CREATE FOUR METERS
+========================================================== */
+
+createMeter(
+    "meterIa",
+    "A",
+    10,
+    2,
+    [0, 2, 4, 6, 8, 10]
+);
+
+
+createMeter(
+    "meterIf",
+    "A",
+    1.5,
+    0.5,
+    [0, 0.5, 1.0, 1.5]
+);
+
+
+createMeter(
+    "meterIL",
+    "A",
+    10,
+    2,
+    [0, 2, 4, 6, 8, 10]
+);
+
+
+createMeter(
+    "meterVa",
+    "V",
+    250,
+    50,
+    [0, 50, 100, 150, 200, 250]
+);
+
+
+createMeter(
+    "meterVf",
+    "V",
+    250,
+    50,
+    [0, 50, 100, 150, 200, 250]
+);
+
+
+/* ==========================================================
+   MOVE NEEDLE
+========================================================== */
+
+function moveNeedle(
+    meterId,
+    value,
+    maxValue
+) {
+
+    value =
+        Math.max(
+            0,
+            Math.min(
+                maxValue,
+                value
+            )
+        );
+
+
+    const svg =
+        document.getElementById(
+            meterId
+        );
+
+
+    const needle =
+        document.getElementById(
+            meterId + "_needle"
+        );
+
+
+    const cx = 180;
+    const cy = 150;
+    const radius = 105;
+
+    const startAngle = 210;
+    const endAngle = 330;
+
+
+    const ratio =
+        value / maxValue;
+
+
+    const angle =
+        startAngle +
+        ratio *
+        (endAngle - startAngle);
+
+
+    const rad =
+        angle * Math.PI / 180;
+
+
+    const x2 =
+        cx +
+        radius *
+        Math.cos(rad);
+
+
+    const y2 =
+        cy +
+        radius *
+        Math.sin(rad);
+
+
+    needle.setAttribute(
+        "x2",
+        x2
+    );
+
+    needle.setAttribute(
+        "y2",
+        y2
+    );
+
+}
+
+
+/* ==========================================================
+   MOTOR
+========================================================== */
+
+let motorRunning = false;
+
+
+function startMotor() {
+
+    motorRunning = true;
+
+    document
+        .getElementById("motor")
+        .classList
+        .add("running");
+
+    document
+        .getElementById("status")
+        .innerText =
+        "MOTOR RUNNING";
+
+    document
+        .getElementById("status")
+        .style.color =
+        "green";
+
+    updateMotor();
+
+}
+
+
+function stopMotor() {
+
+    motorRunning = false;
+
+    document
+        .getElementById("motor")
+        .classList
+        .remove("running");
+
+    document
+        .getElementById("status")
+        .innerText =
+        "MOTOR STOPPED";
+
+    document
+        .getElementById("status")
+        .style.color =
+        "red";
+
+    updateMotor();
+
+}
+
+
+/* ==========================================================
+   UPDATE
+========================================================== */
+
+function updateMotor() {
+
+    const voltage =
+        Number(
+            document
+            .getElementById("voltage")
+            .value
+        );
+
+
+    /* Voltage */
+
+    document
+        .getElementById("voltageValue")
+        .innerText =
+        voltage + " V";
+
+
+    document
+        .getElementById("svgVoltage")
+        .textContent =
+        voltage + " V";
+
+
+    document
+        .getElementById("digitalVa")
+        .innerText =
+        voltage.toFixed(0);
+
+
+    document
+        .getElementById("digitalVf")
+        .innerText =
+        voltage.toFixed(0);
+
+
+    /* Voltmeter needles */
+
+    moveNeedle(
+        "meterVa",
+        voltage,
+        250
+    );
+
+
+    moveNeedle(
+        "meterVf",
+        voltage,
+        250
+    );
+
+
+    document
+        .getElementById("readingVa")
+        .innerText =
+        voltage.toFixed(2)
+        + " V";
+
+
+    document
+        .getElementById("readingVf")
+        .innerText =
+        voltage.toFixed(2)
+        + " V";
+
+
+    /* =========================================
+       STOPPED
+    ========================================= */
+
+    if (
+        !motorRunning ||
+        voltage === 0
+    ) {
+
+        resetCurrent();
+
+        return;
+
+    }
+
+
+    /* =========================================
+       SIMULATION
+    ========================================= */
+
+
+    /* Armature current 0 - 10 A */
+
+    let Ia =
+        voltage / 22;
+
+
+    Ia =
+        Math.min(
+            10,
+            Ia
+        );
+
+
+    /* Field current 0 - 1.5 A */
+
+    let If =
+        voltage / 146.67;
+
+
+    If =
+        Math.min(
+            1.5,
+            If
+        );
+
+
+    /* Line current: IL = Ia + If */
+
+    let IL = Ia + If;
+
+    IL =
+        Math.min(
+            10,
+            IL
+        );
+
+
+    /* Speed */
+
+    let speed =
+        Math.round(
+            voltage * 7
+        );
+
+
+    /* Torque */
+
+    let torque =
+        Ia * 0.5;
+
+
+    torque =
+        Math.min(
+            5,
+            torque
+        );
+
+
+    /* Digital */
+
+    document
+        .getElementById("digitalIa")
+        .innerText =
+        Ia.toFixed(2);
+
+
+    document
+        .getElementById("digitalIf")
+        .innerText =
+        If.toFixed(2);
+
+
+    document
+        .getElementById("digitalIL")
+        .innerText =
+        IL.toFixed(2);
+
+
+    document
+        .getElementById("digitalSpeed")
+        .innerText =
+        speed;
+
+
+    document
+        .getElementById("digitalTorque")
+        .innerText =
+        torque.toFixed(2);
+
+
+    /* Analog readings */
+
+    document
+        .getElementById("readingIa")
+        .innerText =
+        Ia.toFixed(2)
+        + " A";
+
+
+    document
+        .getElementById("readingIf")
+        .innerText =
+        If.toFixed(2)
+        + " A";
+
+
+    document
+        .getElementById("readingIL")
+        .innerText =
+        IL.toFixed(2)
+        + " A";
+
+
+    /* Move ammeter needles */
+
+    moveNeedle(
+        "meterIa",
+        Ia,
+        10
+    );
+
+
+    moveNeedle(
+        "meterIf",
+        If,
+        1.5
+    );
+
+
+    moveNeedle(
+        "meterIL",
+        IL,
+        10
+    );
+
+}
+
+
+/* ==========================================================
+   RESET CURRENT METERS
+========================================================== */
+
+function resetCurrent() {
+
+    document
+        .getElementById("digitalIa")
+        .innerText =
+        "0.00";
+
+
+    document
+        .getElementById("digitalIf")
+        .innerText =
+        "0.00";
+
+
+    document
+        .getElementById("digitalIL")
+        .innerText =
+        "0.00";
+
+
+    document
+        .getElementById("digitalSpeed")
+        .innerText =
+        "0";
+
+
+    document
+        .getElementById("digitalTorque")
+        .innerText =
+        "0.00";
+
+
+    document
+        .getElementById("readingIa")
+        .innerText =
+        "0.00 A";
+
+
+    document
+        .getElementById("readingIf")
+        .innerText =
+        "0.00 A";
+
+
+    document
+        .getElementById("readingIL")
+        .innerText =
+        "0.00 A";
+
+
+    moveNeedle(
+        "meterIa",
+        0,
+        10
+    );
+
+
+    moveNeedle(
+        "meterIf",
+        0,
+        1.5
+    );
+
+
+    moveNeedle(
+        "meterIL",
+        0,
+        10
+    );
+
+}
+
+
+/* ==========================================================
+   SLIDER
+========================================================== */
+
+document
+    .getElementById("voltage")
+    .addEventListener(
+        "input",
+        updateMotor
+    );
+
+
+/* Initial */
+
+updateMotor();
+
+</script>
+
+
+</body>
+
+</html>
