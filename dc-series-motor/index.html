@@ -533,13 +533,13 @@ STEP 4: Virtual Wiring Practice
 
 <div class="w-component w-motor">
 <div class="big">E<sub>b</sub></div><div class="gear">⚙</div>
-<div>A<sub>1</sub> &nbsp;&nbsp; A<sub>2</sub></div>
+<div>F<sub>1</sub> &nbsp;&nbsp; F<sub>2</sub></div>
 </div>
 
 <div class="w-component w-field">
 <div style="font-size:20px;font-weight:bold">SERIES FIELD</div>
 <div class="coil">〰</div>
-<div>F<sub>1</sub> &nbsp;&nbsp; F<sub>2</sub></div>
+<div>A<sub>1</sub> &nbsp;&nbsp; A<sub>2</sub></div>
 </div>
 
 <div class="w-component w-volt w-va" style="left:505px;top:240px">
@@ -575,10 +575,10 @@ STEP 4: Virtual Wiring Practice
 <div class="w-termLabel" style="left:754px;top:220px;font-size:18px">−</div>
 <div class="w-termLabel" style="left:586px;top:102px;color:#c00">+</div>
 <div class="w-termLabel" style="left:505px;top:102px">−</div>
-<div class="w-termLabel" style="left:62px;top:245px;color:#c00">A1 +</div>
-<div class="w-termLabel" style="left:62px;top:442px">A2 −</div>
-<div class="w-termLabel" style="left:272px;top:260px;color:#c00">F1 +</div>
-<div class="w-termLabel" style="left:272px;top:438px">F2 −</div>
+<div class="w-termLabel" style="left:62px;top:245px;color:#c00">F1 +</div>
+<div class="w-termLabel" style="left:62px;top:442px">F2 −</div>
+<div class="w-termLabel" style="left:272px;top:260px;color:#c00">A1 +</div>
+<div class="w-termLabel" style="left:272px;top:438px">A2 −</div>
 <div class="w-termLabel" style="left:512px;top:192px;color:#c00">+</div>
 <div class="w-termLabel" style="left:512px;top:362px">−</div>
 <div class="w-termLabel" style="left:687px;top:192px;color:#c00">+</div>
@@ -744,13 +744,13 @@ STEP 4: Virtual Wiring Practice
 <script>
 const required=[
 ["vt_p","il_p","Vt (+) → IL (+)"],
-["il_n","a1","IL (−) → A1"],
-["a2","f1","A2 → F1"],
-["f2","vt_n","F2 → Vt (−)"],
-["va_p","a1","Va (+) → A1"],
-["va_n","a2","Va (−) → A2"],
-["vse_p","f1","Vse (+) → F1"],
-["vse_n","f2","Vse (−) → F2"]
+["il_n","f1","IL (−) → F1 (+)"],
+["f2","a1","F2 (−) → A1 (+)"],
+["a2","vt_n","A2 (−) → Vt (−)"],
+["va_p","a1","Va (+) → A1 (+)"],
+["va_n","a2","Va (−) → A2 (−)"],
+["vse_p","f1","Vse (+) → F1 (+)"],
+["vse_n","f2","Vse (−) → F2 (−)"]
 ];
 const p={
 vt_p:[772,20],vt_n:[772,207],il_p:[602,137],il_n:[522,137],
