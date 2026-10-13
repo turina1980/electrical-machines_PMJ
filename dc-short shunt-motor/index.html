@@ -1707,22 +1707,25 @@ function duplicate(a,b){
 }
 
 function connect(a,b){
- if(duplicate(a,b)){
-   setStatus("⚠️ This connection already exists.","bad");
-   return;
- }
+  if(duplicate(a,b)){
+    setStatus("⚠️ This connection already exists.","bad");
+    return;
+  }
 
- connections.push([a,b]);
- drawWire(a,b);
+  if(!isRequired(a,b)){
+    setStatus(
+      "❌ Incorrect connection! Previous correct connections are kept. Please try again.",
+      "bad"
+    );
+    return;
+  }
 
- if(isRequired(a,b)){
-   setStatus("✅ Correct connection!","ok");
-   updateRows();
- }else{
-   setStatus("❌ Incorrect connection. Please press RESET and try again.","bad");
- }
+  connections.push([a,b]);
+  drawWire(a,b);
 
- checkComplete();
+  setStatus("✅ Correct connection!","ok");
+  updateRows();
+  checkComplete();
 }
 
 function getTerminalPoint(id){
