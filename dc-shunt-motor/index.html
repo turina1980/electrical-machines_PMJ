@@ -1697,24 +1697,32 @@ function duplicate(a,b){
  return connections.some(c=>same(a,b,c[0],c[1]));
 }
 
+
 function connect(a,b){
- if(duplicate(a,b)){
-   setStatus("⚠️ This connection already exists.","bad");
-   return;
- }
+  if(duplicate(a,b)){
+    setStatus("⚠️ This connection already exists.","bad");
+    return;
+  }
 
- connections.push([a,b]);
- drawWire(a,b);
+  // If the connection is wrong, do not add the wire.
+  // All previously correct connections remain.
+  if(!isRequired(a,b)){
+    setStatus(
+      "❌ Incorrect connection! Only this attempt is rejected. Previous correct connections are kept. Try again.",
+      "bad"
+    );
+    return;
+  }
 
- if(isRequired(a,b)){
-   setStatus("✅ Correct connection!","ok");
-   updateRows();
- }else{
-   setStatus("❌ Incorrect connection. Please press RESET and try again.","bad");
- }
+  // Add only a correct connection.
+  connections.push([a,b]);
+  drawWire(a,b);
 
- checkComplete();
+  setStatus("✅ Correct connection!","ok");
+  updateRows();
+  checkComplete();
 }
+
 
 function drawWire(a,b){
  const svg=document.getElementById("w_wires");
