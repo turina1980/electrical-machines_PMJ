@@ -779,13 +779,31 @@ document.querySelectorAll(".w-terminal").forEach(t=>{
 function same(a,b,c,d){return(a===c&&b===d)||(a===d&&b===c)}
 function isRequired(a,b){return required.some(r=>same(a,b,r[0],r[1]))}
 function duplicate(a,b){return connections.some(c=>same(a,b,c[0],c[1]))}
+
 function connect(a,b){
- if(duplicate(a,b)){setStatus("⚠️ This connection already exists.","bad");return;}
- connections.push([a,b]);drawWire(a,b);
- if(isRequired(a,b)){setStatus("✅ Correct connection!","ok");updateRows();}
- else{setStatus("❌ Incorrect connection. Please press RESET and try again.","bad");}
- checkComplete();
+  if(duplicate(a,b)){
+    setStatus("⚠️ This connection already exists.","bad");
+    return;
+  }
+
+  // Reject incorrect connections only
+  if(!isRequired(a,b)){
+    setStatus(
+      "❌ Incorrect connection! Previous correct connections are kept. Please try again.",
+      "bad"
+    );
+    return;
+  }
+
+  // Add correct connection
+  connections.push([a,b]);
+  drawWire(a,b);
+
+  setStatus("✅ Correct connection!","ok");
+  updateRows();
+  checkComplete();
 }
+
 function drawWire(a,b){
  const svg=document.getElementById("w_wires"), q=document.createElementNS("http://www.w3.org/2000/svg","line");
  q.setAttribute("x1",p[a][0]);q.setAttribute("y1",p[a][1]);q.setAttribute("x2",p[b][0]);q.setAttribute("y2",p[b][1]);q.setAttribute("class","w-wire");svg.appendChild(q);
